@@ -1,0 +1,20 @@
+Simple step profiler for node.js
+
+Usage:
+
+var Profiler = require('step-profiler');
+
+var opts = {
+  statsd_client: new StatsD(...);
+}
+var profiler = new Profiler(opts);
+profiler.start('task1');
+...
+profiler.done('op1');
+...
+profiler.done('op2');
+...
+profiler.end(); // ends 'task1'
+...
+console.log(profiler.toString());
+profiler.sendStats()
