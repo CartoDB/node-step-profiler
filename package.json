@@ -1,0 +1,25 @@
+{
+    "name": "step-profiler",
+    "version": "0.0.1",
+    "main": "./profiler.js",
+    "description": "A simple profiler for node.js applications",
+    "url": "https://github.com/cartodb/node-step-profiler",
+    "licenses": [{
+        "type": "BSD",
+        "url": "https://github.com/cartodb/node-step-profiler/blob/master/LICENCE"
+    }],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/cartodb/node-step-profiler.git"
+    },
+    "author": "Sandro Santilli <strk@vizzuality.com>",
+    "contributors": [
+    ],
+    "dependencies": {
+    },
+    "devDependencies": {
+    },
+    "scripts": {
+    },
+    "engine": { "node": ">= 0.6 < 0.9" }
+}
