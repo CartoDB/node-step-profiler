@@ -138,4 +138,25 @@ Profiler.prototype.toString = function() {
   return s;
 }
 
+Profiler.prototype.toJSONString = function() {
+    var sitems = {};
+    var prevt;
+    var ttime = 0;
+    for (var i=0; i<this.events.length; ++i) {
+        var ev = this.events[i];
+        var t = ev.time;
+        if ( ! i ) prevt = t;
+        // we're only interested in abs times
+        if ( ev.start || ev.end ) continue;
+        var el = ev.time - prevt;
+        if ( el ) { // skip steps taking no computable time
+            sitems[ev.name] = el;
+            ttime += el;
+        }
+        prevt = t;
+    }
+    sitems['total'] = ttime;
+    return JSON.stringify(sitems);
+}
+
 module.exports = Profiler;
