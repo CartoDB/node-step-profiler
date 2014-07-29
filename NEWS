@@ -1,5 +1,7 @@
 0.0.2 -- 2014-MM-DD
+-------------------
+* Method to return an stringified representation of the profiler
 
 0.0.1 -- 2014-03-19
-
- Initial release
+-------------------
+* Initial release
