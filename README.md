@@ -1,7 +1,8 @@
-Simple step profiler for node.js
+# Simple step profiler for node.js
 
-Usage:
+## Usage:
 
+```javascript
 var Profiler = require('step-profiler');
 
 var opts = {
@@ -21,3 +22,4 @@ profiler.end(); // ends 'task1'
 ...
 console.log(profiler.toString());
 profiler.sendStats()
+```
