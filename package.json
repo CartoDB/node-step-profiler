@@ -1,6 +1,6 @@
 {
     "name": "step-profiler",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "main": "./profiler.js",
     "description": "A simple profiler for node.js applications",
     "url": "https://github.com/cartodb/node-step-profiler",

@@ -1,4 +1,7 @@
-0.2.0 -- 2014-03-10
+0.2.1 -- 2015-mm-dd
+-------------------
+
+0.2.0 -- 2015-03-10
 -------------------
 * Adds method to push custom metrics with a {String} => {Number} map
 
