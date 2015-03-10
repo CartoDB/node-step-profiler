@@ -1,4 +1,4 @@
-var debug = 0;
+var debug = false;
 
 function Profiler(opts) {
   if ( opts.statsd_client ) {
@@ -16,7 +16,7 @@ Profiler.prototype.done = function(what) {
   }
   var item = { name:what, time:now };
   this.events.push(item);
-}
+};
 
 Profiler.prototype.end = function() {
   if ( ! this.taskcount ) {
@@ -28,19 +28,19 @@ Profiler.prototype.end = function() {
   if ( debug ) {
     console.log("prf " + now + " end task ");
   }
-  var item = { time:now, end:1 }
+  var item = { time:now, end:1 };
   this.events.push(item);
-}
+};
 
 Profiler.prototype.start = function(what) {
   var now = Date.now();
   if ( debug ) {
     console.log("prf " + now + " start task " + what);
   }
-  var item = { time:now, start:1, name:what }
+  var item = { time:now, start:1, name:what };
   this.events.push(item);
   ++this.taskcount;
-}
+};
 
 /**
  * Allows to add custom metrics
@@ -62,11 +62,14 @@ Profiler.prototype.sendStats = function() {
   var prefix = [];
   var prefix_string = '';
   var prevtime = 0;
+  var tname = '';
+  var elapsed;
+  var lbl;
   for (var i=0; i<this.events.length; ++i) {
     var ev = this.events[i];
     var t = ev.time;
     if ( ev.start ) { // start of a new sub task
-      var tname = ev.name;
+      tname = ev.name;
       tasks.push({ start:t, name:tname });
       if ( debug ) {
         console.log("prf Task " + tname + " starts at " + t);
@@ -77,12 +80,12 @@ Profiler.prototype.sendStats = function() {
     else if ( ev.end ) { // end of a new sub task
       var task = tasks.pop();
       if ( task ) {
-        var elapsed = t - task.start;
+        elapsed = t - task.start;
         if ( debug ) {
           console.log("prf Task " + tname + " stops at " + t + " elapsed: "  + elapsed);
         }
         if ( elapsed || debug ) {
-          var lbl = prefix_string + '.time';
+          lbl = prefix_string + '.time';
           if ( debug ) {
             console.log("prf Sending (task) " + lbl + " " + elapsed);
           }
@@ -96,9 +99,9 @@ Profiler.prototype.sendStats = function() {
     }
     else {
       var what = ev.name;
-      var elapsed = t - prevtime;
+      elapsed = t - prevtime;
       if ( elapsed || debug ) {
-        var lbl = prefix_string + '.' + what + '.time';
+        lbl = prefix_string + '.' + what + '.time';
         if ( debug ) {
           console.log("prf Sending (done) " + lbl + " " + elapsed);
         }
@@ -109,13 +112,13 @@ Profiler.prototype.sendStats = function() {
   }
   // In case anything is missing...
   while ( task = tasks.pop() ) {
-      var tname = task.name;
-      var elapsed = t - task.start;
+      tname = task.name;
+      elapsed = t - task.start;
       if ( debug ) {
         console.log("prf Task " + tname + " stops (uncleanly) at " + t + " elapsed: "  + elapsed + " " + tasks.length + " more open tasks in the queue");
       }
       if ( elapsed || debug ) {
-        var lbl = prefix_string + '.time';
+        lbl = prefix_string + '.time';
         if ( debug ) {
           console.log("prf Sending (task) " + lbl + " " + elapsed);
         }
@@ -124,7 +127,7 @@ Profiler.prototype.sendStats = function() {
       prefix.pop();
       prefix_string = prefix.join('.');
   }
-}
+};
 
 Profiler.prototype.toString = function() {
   var sitems = [];
@@ -148,7 +151,7 @@ Profiler.prototype.toString = function() {
     console.log("prf toString " + s);
   }
   return s;
-}
+};
 
 Profiler.prototype.toJSONString = function() {
     var sitems = {};
@@ -169,9 +172,9 @@ Profiler.prototype.toJSONString = function() {
     }
     Object.keys(this.custom).forEach(function(key) {
         sitems[key] = this.custom[key];
-    }.bind(this))
+    }.bind(this));
     sitems['total'] = ttime;
     return JSON.stringify(sitems);
-}
+};
 
 module.exports = Profiler;
