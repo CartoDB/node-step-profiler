@@ -5,6 +5,7 @@ function Profiler(opts) {
     this.statsd_client = opts.statsd_client;
   }
   this.events = [];
+  this.custom = {};
   this.taskcount = 0;
 }
 
@@ -40,6 +41,17 @@ Profiler.prototype.start = function(what) {
   this.events.push(item);
   ++this.taskcount;
 }
+
+/**
+ * Allows to add custom metrics
+ *
+ * @param {Object} metrics a {String} => {Number} map
+ */
+Profiler.prototype.add = function(metrics) {
+  Object.keys(metrics).forEach(function(key) {
+    this.custom[key] = metrics[key];
+  }.bind(this));
+};
 
 Profiler.prototype.sendStats = function() {
   if ( ! this.statsd_client ) return;
@@ -155,6 +167,9 @@ Profiler.prototype.toJSONString = function() {
         }
         prevt = t;
     }
+    Object.keys(this.custom).forEach(function(key) {
+        sitems[key] = this.custom[key];
+    }.bind(this))
     sitems['total'] = ttime;
     return JSON.stringify(sitems);
 }

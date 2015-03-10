@@ -1,5 +1,6 @@
-0.1.1 -- 2014-mm-dd
+0.2.0 -- 2014-mm-dd
 -------------------
+* Adds method to push custom metrics with a {String} => {Number} map
 
 0.1.0 -- 2014-07-29
 -------------------
