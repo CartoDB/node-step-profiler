@@ -1,5 +1,5 @@
 var assert = require('assert');
-var Profiler = require('./profiler');
+var Profiler = require('./../profiler');
 
 // monkey patch Date.now
 var startTime = 0;
