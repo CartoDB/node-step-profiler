@@ -143,18 +143,25 @@ Profiler.prototype.toJSONString = function() {
         if ( ev.start || ev.end ) continue;
         var el = ev.time - prevt;
         if ( el ) { // skip steps taking no computable time
-            sitems[ev.name] = el;
+            sitems[replaceDots(ev.name)] = el;
             ttime += el;
         }
         prevt = t;
     }
     Object.keys(this.custom).forEach(function(key) {
-        sitems[key] = this.custom[key];
+        sitems[replaceDots(key)] = this.custom[key];
     }.bind(this));
     if (ttime) {
         sitems.total = ttime;
     }
     return JSON.stringify(sitems);
 };
+
+function replaceDots(key) {
+    if (key) {
+        key = key.replace(/\./g, '_');
+    }
+    return key;
+}
 
 module.exports = Profiler;
