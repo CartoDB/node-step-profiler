@@ -1,4 +1,4 @@
-var debug = false;
+var debug = require('debug')('step-profiler');
 
 function Profiler(opts) {
   if ( opts.statsd_client ) {
@@ -11,32 +11,26 @@ function Profiler(opts) {
 
 Profiler.prototype.done = function(what) {
   var now = Date.now();
-  if ( debug ) {
-    console.log("prf " + now + " done " + what);
-  }
+  debug("prf " + now + " done " + what);
   var item = { name:what, time:now };
   this.events.push(item);
 };
 
 Profiler.prototype.end = function() {
   if ( ! this.taskcount ) {
-    console.log("prf Unbalanced end task event refused");
+    debug("prf Unbalanced end task event refused");
     return;
   }
   --this.taskcount;
   var now = Date.now();
-  if ( debug ) {
-    console.log("prf " + now + " end task ");
-  }
+  debug("prf " + now + " end task ");
   var item = { time:now, end:1 };
   this.events.push(item);
 };
 
 Profiler.prototype.start = function(what) {
   var now = Date.now();
-  if ( debug ) {
-    console.log("prf " + now + " start task " + what);
-  }
+  debug("prf " + now + " start task " + what);
   var item = { time:now, start:1, name:what };
   this.events.push(item);
   ++this.taskcount;
@@ -55,9 +49,7 @@ Profiler.prototype.add = function(metrics) {
 
 Profiler.prototype.sendStats = function() {
   if ( ! this.statsd_client ) return;
-  if ( debug ) {
-    console.log("prf " + Date.now() + " SEND STATS! ");
-  }
+  debug("prf " + Date.now() + " SEND STATS! ");
   var tasks = [];
   var prefix = [];
   var prefix_string = '';
@@ -71,9 +63,7 @@ Profiler.prototype.sendStats = function() {
     if ( ev.start ) { // start of a new sub task
       tname = ev.name;
       tasks.push({ start:t, name:tname });
-      if ( debug ) {
-        console.log("prf Task " + tname + " starts at " + t);
-      }
+      debug("prf Task " + tname + " starts at " + t);
       prefix.push(tname);
       prefix_string = prefix.join('.');
     }
@@ -81,20 +71,16 @@ Profiler.prototype.sendStats = function() {
       var task = tasks.pop();
       if ( task ) {
         elapsed = t - task.start;
-        if ( debug ) {
-          console.log("prf Task " + tname + " stops at " + t + " elapsed: "  + elapsed);
-        }
+        debug("prf Task " + tname + " stops at " + t + " elapsed: "  + elapsed);
         if ( elapsed || debug ) {
           lbl = prefix_string + '.time';
-          if ( debug ) {
-            console.log("prf Sending (task) " + lbl + " " + elapsed);
-          }
+          debug("prf Sending (task) " + lbl + " " + elapsed);
           this.statsd_client.timing(lbl, elapsed)
         }
         prefix.pop();
         prefix_string = prefix.join('.');
       } else {
-        console.log("prf Unbalanced end task event found");
+        debug("prf Unbalanced end task event found");
       }
     }
     else {
@@ -102,9 +88,7 @@ Profiler.prototype.sendStats = function() {
       elapsed = t - prevtime;
       if ( elapsed || debug ) {
         lbl = prefix_string + '.' + what + '.time';
-        if ( debug ) {
-          console.log("prf Sending (done) " + lbl + " " + elapsed);
-        }
+        debug("prf Sending (done) " + lbl + " " + elapsed);
         this.statsd_client.timing(lbl, elapsed)
       }
     }
@@ -114,14 +98,10 @@ Profiler.prototype.sendStats = function() {
   while ( task = tasks.pop() ) {
       tname = task.name;
       elapsed = t - task.start;
-      if ( debug ) {
-        console.log("prf Task " + tname + " stops (uncleanly) at " + t + " elapsed: "  + elapsed + " " + tasks.length + " more open tasks in the queue");
-      }
+      debug("prf Task " + tname + " stops (uncleanly) at " + t + " elapsed: "  + elapsed + " " + tasks.length + " more open tasks in the queue");
       if ( elapsed || debug ) {
         lbl = prefix_string + '.time';
-        if ( debug ) {
-          console.log("prf Sending (task) " + lbl + " " + elapsed);
-        }
+        debug("prf Sending (task) " + lbl + " " + elapsed);
         this.statsd_client.timing(lbl, elapsed)
       }
       prefix.pop();
@@ -147,9 +127,7 @@ Profiler.prototype.toString = function() {
     prevt = t;
   }
   var s = 'TOT:'+ttime+';'+sitems.join(';');
-  if ( debug ) {
-    console.log("prf toString " + s);
-  }
+  debug("prf toString " + s);
   return s;
 };
 
