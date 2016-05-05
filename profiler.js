@@ -151,7 +151,9 @@ Profiler.prototype.toJSONString = function() {
     Object.keys(this.custom).forEach(function(key) {
         sitems[key] = this.custom[key];
     }.bind(this));
-    sitems['total'] = ttime;
+    if (ttime) {
+        sitems.total = ttime;
+    }
     return JSON.stringify(sitems);
 };
 
