@@ -15,12 +15,9 @@
     "url": "git://github.com/cartodb/node-step-profiler.git"
   },
   "author": "Sandro Santilli <strk@vizzuality.com>",
-  "contributors": [],
   "dependencies": {
     "debug": "^2.2.0"
   },
-  "devDependencies": {},
-  "scripts": {},
   "engine": {
     "node": ">= 0.6 < 0.11"
   }
