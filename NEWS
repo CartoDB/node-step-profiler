@@ -1,5 +1,7 @@
-0.2.2 -- 2015-mm-dd
+0.3.0 -- 2016-mm-dd
 -------------------
+* toJSONString: avoid using dots in keys
+* toJSONString: do not send total if sums 0.
 
 0.2.1 -- 2015-03-10
 -------------------
